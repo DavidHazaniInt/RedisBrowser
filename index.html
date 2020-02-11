@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Redis Browser</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <link href="/static/favicon.png" rel="shortcut icon">
+    </head>
+    <body>
+        <div style="margin-left: 2%;">
+            <h1 class="text-center">Redis Browser</h1>
+            <form class="form-inline" role="form" action='/set' method='get'>
+                <label>Host: </label>
+                <div style="margin-left: 10px;" class="input-group col-sm-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">#STATUS#</span>
+                    </div>
+                    <input class="form-control" type="text" id="host" name="host" value="localhost"/>
+                </div>
+                <label  style="margin-left: 10px;" >Port: </label>
+                <input  style="margin-left: 10px;" class="form-control col-sm-1" type="number" id="port" name="port" value="54379"/>
+                <label  style="margin-left: 10px;" >Page size: </label>
+                <input  style="margin-left: 10px;" class="form-control col-sm-1" type="number" id="page_size" name="page_size" value="20"/>
+                <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Connect</button>
+            </form>
+            <form class="form-inline" role="form" action='/data' method='get'>
+                <label for="selected_key">Queue: </label>
+                <select class="form-control col-sm-4" style="margin-left: 10px;" id="selected_key" name="selected_key">
+                    #KEYS_OPTIONS#
+                </select>
+                <label for="page" style="margin-left: 10px;">Page: </label>
+                <input  style="margin-left: 10px;" class="form-control col-sm-1" type="number" id="page" name="page" value="#SELECTED_PAGE#" min="1" max="#MAX_PAGE#"/>
+                <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Refresh</button>
+            </form>
+            <div>
+                #CONTENT#
+            </div>
+        </div>
+    <body>
+<html>
