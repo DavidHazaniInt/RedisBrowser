@@ -11,9 +11,13 @@ import pprint
 class RedisManager():
     _redis = None
     page_size = 20
+    host = 'localhost'
+    port = 34379
 
     def set(self, host, port, page_size):
         self.page_size = int(page_size)
+        self.host = host
+        self.port = port
         self._redis = redis.Redis(host, port)
         self._redis.keys()
 
@@ -49,22 +53,6 @@ def index():
     )
 
 
-def default_content():
-    updated_content = TEMPLATE
-
-    updated_content = updated_content.replace('#SELECTED_PAGE#', '1')
-    updated_content = updated_content.replace('#MAX_PAGE#', '10')
-
-    if redis_client and redis_client.is_ok():
-        updated_content = updated_content.replace('#STATUS#', '<span class="badge badge-success">Connected</span>')
-    else:
-        updated_content = updated_content.replace('#STATUS#', '<span class="badge badge-secondary">Disconnected</span>')
-
-    updated_content = replace_redis_keys(updated_content)
-    updated_content = update_key_content(updated_content)
-
-    return updated_content
-
 
 @app.get('/set')
 def set_redis(host, port, page_size):
@@ -88,6 +76,8 @@ def data(
         return index()
 
     updated_content = TEMPLATE
+    updated_content = update_redis_paramters(updated_content)
+
     updated_content = updated_content.replace('#SELECTED_PAGE#', page)
     updated_content = updated_content.replace('#MAX_PAGE#', get_max_page(selected_key))
     updated_content = updated_content.replace('#STATUS#', '<span class="badge badge-success">Connected</span>')
@@ -101,6 +91,34 @@ def data(
     )
 
 
+
+def default_content():
+    updated_content = TEMPLATE
+
+    updated_content = updated_content.replace('#SELECTED_PAGE#', '1')
+    updated_content = updated_content.replace('#MAX_PAGE#', '10')
+    updated_content = update_redis_paramters(updated_content)
+
+    if redis_client and redis_client.is_ok():
+        updated_content = updated_content.replace('#STATUS#', '<span class="badge badge-success">Connected</span>')
+    else:
+        updated_content = updated_content.replace('#STATUS#', '<span class="badge badge-secondary">Disconnected</span>')
+
+    updated_content = replace_redis_keys(updated_content)
+    updated_content = update_key_content(updated_content)
+
+    return updated_content
+
+
+def update_redis_paramters(template):
+    updated_content = template
+    updated_content = updated_content.replace('#HOST#', redis_client.host)
+    updated_content = updated_content.replace('#PORT#', str(redis_client.port))
+    updated_content = updated_content.replace('#PAGE_SIZE#', str(redis_client.page_size))
+
+    return updated_content
+
+
 def get_max_page(
     key,
 ):
@@ -109,7 +127,10 @@ def get_max_page(
     if key_type == 'string':
         return '10'
     elif key_type == 'list':
-        return str((redis_client.get().llen(key) / redis_client.page_size) + 1)
+        try:
+            return str((redis_client.get().llen(key) / redis_client.page_size) + 1)
+        except Exception:
+            return '10'
 
 
 def update_key_content(
