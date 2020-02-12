@@ -178,6 +178,15 @@ def update_key_content(
     return template.replace('#CONTENT#', content)
 
 
+def get_key_len(key):
+    key_type = redis_client.get().type(key).decode("utf-8")
+
+    if key_type == 'string':
+        return redis_client.get().get(key).decode("utf-8")
+    elif key_type == 'list':
+        return redis_client.get().llen(key)
+
+
 def replace_redis_keys(
     template,
     selected_key=None,
