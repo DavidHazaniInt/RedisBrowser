@@ -19,10 +19,15 @@ class RedisManager():
         self.host = host
         self.port = port
         self._redis = redis.Redis(host, port)
-        self._redis.keys()
 
     def is_set(self):
-        return self._redis is not None
+        if self._redis is None:
+            return False
+        try:
+            self._redis.keys()
+            return True
+        except Exception:
+            return False
 
     def is_ok(self):
         try:
@@ -51,7 +56,6 @@ def index():
         content=default_content(),
         status_code=200,
     )
-
 
 
 @app.get('/set')
@@ -89,7 +93,6 @@ def data(
         content=updated_content,
         status_code=200,
     )
-
 
 
 def default_content():
