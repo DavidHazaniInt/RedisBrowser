@@ -1,0 +1,3 @@
+#!/usr/bin/zsh
+
+print -n -P %F{red}; python3 /home/david/DEV/side_effects/dashboards/redis_master.py prod
