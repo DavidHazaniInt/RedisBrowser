@@ -31,6 +31,11 @@
                 <input  style="margin-left: 10px;" class="form-control col-sm-1" type="number" id="page" name="page" value="#SELECTED_PAGE#" min="1" max="#MAX_PAGE#"/>
                 <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Refresh</button>
             </form>
+            <form class="form-inline" role="form" action='/filter' method='get'>
+                <label for="term" style="">Search: </label>
+                <input  style="margin-left: 10px;" class="form-control col-sm-4" type="text" id="term" name="term" value="#SELECTED_FILTER#"/>
+                <button style="margin-left: 10px;" type="submit" class="btn btn-primary">Search</button>
+            </form>
             <div>
                 #CONTENT#
             </div>
